@@ -13,6 +13,7 @@
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
+            transition: all 0.5s ease;
         }
         #myTextarea {
             width: 90%;
@@ -58,6 +59,11 @@
             this.setSelectionRange(0,0);
             this.blur();
             this.focus();
+            document.body.style.justifyContent = 'flex-start';
+        };
+
+        textarea.onblur = function() {
+            document.body.style.justifyContent = 'center';
         };
 
         fixButton.onclick = function() {
