@@ -28,6 +28,9 @@
             display: flex;
             gap: 10px;
         }
+        #revertButtonContainer {
+            margin-top: 10px;
+        }
         button {
             padding: 10px 20px;
             font-size: 16px;
@@ -54,14 +57,20 @@
 		<button id="copyButton">העתקה</button>
         <button id="fixButton">תיקון</button>
     </div>
+    <div id="revertButtonContainer">
+        <button id="revertButton">שחזור הטקסט המקורי</button>
+    </div>
     <p id="myStatus" dir="rtl"></p>
     <script>
         var textarea = document.getElementById('myTextarea');
         var fixButton = document.getElementById('fixButton');
         var copyButton = document.getElementById('copyButton');
-        var mStatus = document.getElementById('myStatus');
+        var revertButton = document.getElementById('revertButton');
+        var myStatus = document.getElementById('myStatus');
+        var originalText = '';
 
         fixButton.onclick = function() {
+            originalText = textarea.value;
             var text = textarea.value;
             var firstHebrewCharIndex = text.search(/[\u0590-\u05FF]/);
             if (firstHebrewCharIndex !== -1 && text[firstHebrewCharIndex + 1] !== '\u2067') {
@@ -71,23 +80,30 @@
                 text += '\u2069';
             }
             textarea.value = text;
-            mStatus.innerText = 'הפוסט תוקן בהצלחה';
-			mStatus.style.display = 'block';
-            setTimeout(function() { mStatus.innerText = ''; mStatus.style.display = 'none'; }, 2000);
+            myStatus.innerText = 'הפוסט תוקן בהצלחה';
+			myStatus.style.display = 'block';
+            setTimeout(function() { myStatus.innerText = ''; myStatus.style.display = 'none'; }, 2000);
         };
 
         copyButton.onclick = function() {
             navigator.clipboard.writeText(textarea.value)
             .then(function() {
-                mStatus.innerText = 'הועתק בהצלחה';
-				mStatus.style.display = 'block';
-                setTimeout(function() { mStatus.innerText = ''; mStatus.style.display = 'none'; }, 2000);
+                myStatus.innerText = 'הועתק בהצלחה';
+				myStatus.style.display = 'block';
+                setTimeout(function() { myStatus.innerText = ''; myStatus.style.display = 'none'; }, 2000);
             })
             .catch(function() {
-                mStatus.innerText = 'ההעתקה נכשלה';
-				mStatus.style.display = 'block';
-                setTimeout(function() { mStatus.innerText = ''; mStatus.style.display = 'none'; }, 2000);
+                myStatus.innerText = 'ההעתקה נכשלה';
+				myStatus.style.display = 'block';
+                setTimeout(function() { myStatus.innerText = ''; myStatus.style.display = 'none'; }, 2000);
             });
+        };
+
+        revertButton.onclick = function() {
+            textarea.value = originalText;
+            myStatus.innerText = 'הטקסט שוחזר למקורי';
+			myStatus.style.display = 'block';
+            setTimeout(function() { myStatus.innerText = ''; myStatus.style.display = 'none'; }, 2000);
         };
     </script>
 </body>
