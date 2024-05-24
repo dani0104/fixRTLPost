@@ -30,7 +30,6 @@
         }
         #revertButtonContainer {
             margin-top: 10px;
-			display: none;
         }
         button {
             padding: 10px 20px;
@@ -49,6 +48,9 @@
             color: green;
 			display: none;
         }
+		#revertButton {
+			display: none;
+		}
     </style>
 </head>
 <body>
@@ -69,7 +71,6 @@
         var revertButton = document.getElementById('revertButton');
         var myStatus = document.getElementById('myStatus');
         var originalText = '';
-
         fixButton.onclick = function() {
             originalText = textarea.value;
             var text = textarea.value;
@@ -83,6 +84,7 @@
             textarea.value = text;
             myStatus.innerText = 'הפוסט תוקן בהצלחה';
 			myStatus.style.display = 'block';
+			revertButton.style.display = 'block';
             setTimeout(function() { myStatus.innerText = ''; myStatus.style.display = 'none'; }, 2000);
         };
 
