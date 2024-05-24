@@ -40,6 +40,11 @@
         button:hover {
             background-color: #007B9A;
         }
+        #myStatus {
+            margin-top: 20px;
+            color: green;
+			display: none;
+        }
     </style>
 </head>
 <body>
@@ -49,16 +54,12 @@
 		<button id="copyButton">העתקה</button>
         <button id="fixButton">תיקון</button>
     </div>
+    <p id="myStatus" dir="rtl"></p>
     <script>
         var textarea = document.getElementById('myTextarea');
         var fixButton = document.getElementById('fixButton');
         var copyButton = document.getElementById('copyButton');
-
-        textarea.onfocus = function() {
-            this.setSelectionRange(0,0);
-            this.blur();
-            this.focus();
-        };
+        var mStatus = document.getElementById('myStatus');
 
         fixButton.onclick = function() {
             var text = textarea.value;
@@ -70,10 +71,23 @@
                 text += '\u2069';
             }
             textarea.value = text;
+            mStatus.innerText = 'הפוסט תוקן בהצלחה';
+			mStatus.style.display = 'block';
+            setTimeout(function() { mStatus.innerText = ''; mStatus.style.display = 'none'; }, 2000);
         };
 
         copyButton.onclick = function() {
-            navigator.clipboard.writeText(textarea.value);
+            navigator.clipboard.writeText(textarea.value)
+            .then(function() {
+                mStatus.innerText = 'הועתק בהצלחה';
+				mStatus.style.display = 'block';
+                setTimeout(function() { mStatus.innerText = ''; mStatus.style.display = 'none'; }, 2000);
+            })
+            .catch(function() {
+                mStatus.innerText = 'ההעתקה נכשלה';
+				mStatus.style.display = 'block';
+                setTimeout(function() { mStatus.innerText = ''; mStatus.style.display = 'none'; }, 2000);
+            });
         };
     </script>
 </body>
