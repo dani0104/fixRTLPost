@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>תקן לי את הפוסט</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 50vh;
+            margin: 0;
+        }
+        #myTextarea {
+            margin-bottom: 20px;
+        }
+        #buttonContainer {
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>תקן לי את הפוסט</h1>
+    <textarea id="myTextarea" dir="rtl" rows="60" cols="90"></textarea>
+    <div id="buttonContainer">
+		<button id="copyButton">העתקה</button>
+        <button id="fixButton">תיקון</button>
+    </div>
+    <script>
+        var textarea = document.getElementById('myTextarea');
+        var fixButton = document.getElementById('fixButton');
+        var copyButton = document.getElementById('copyButton');
+
+        textarea.onfocus = function() {
+            this.setSelectionRange(0,0);
+            this.blur();
+            this.focus();
+        };
+
+        fixButton.onclick = function() {
+            var text = textarea.value;
+            var firstHebrewCharIndex = text.search(/[\u0590-\u05FF]/);
+            if (firstHebrewCharIndex !== -1 && text[firstHebrewCharIndex + 1] !== '\u2067') {
+                text = text.slice(0, firstHebrewCharIndex + 1) + '\u2067' + text.slice(firstHebrewCharIndex + 1);
+            }
+            if (text[text.length - 1] !== '\u2069') {
+                text += '\u2069';
+            }
+            textarea.value = text;
+        };
+
+        copyButton.onclick = function() {
+            navigator.clipboard.writeText(textarea.value);
+        };
+    </script>
+</body>
+</html>
