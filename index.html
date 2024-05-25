@@ -71,22 +71,36 @@
         var revertButton = document.getElementById('revertButton');
         var myStatus = document.getElementById('myStatus');
         var originalText = '';
-        fixButton.onclick = function() {
-            originalText = textarea.value;
-            var text = textarea.value;
-            var firstHebrewCharIndex = text.search(/[\u0590-\u05FF]/);
-            if (firstHebrewCharIndex !== -1 && text[firstHebrewCharIndex + 1] !== '\u2067') {
-                text = text.slice(0, firstHebrewCharIndex + 1) + '\u2067' + text.slice(firstHebrewCharIndex + 1);
-            }
-            if (text[text.length - 1] !== '\u2069') {
-                text += '\u2069';
-            }
-            textarea.value = text;
-            myStatus.innerText = 'הפוסט תוקן בהצלחה';
+		fixButton.onclick = function() {
+			originalText = textarea.value;
+			var lines = textarea.value.split('\n');
+			for (var i = 0; i < lines.length; i++) {
+				var line = lines[i];
+				var firstHebrewCharIndex = line.search(/[\u0590-\u05FF]/);
+				if (i === 0) { // Only for the first line
+					if (firstHebrewCharIndex !== -1 && line[firstHebrewCharIndex + 1] !== '\u2067') {
+						line = line.slice(0, firstHebrewCharIndex + 1) + '\u2067' + line.slice(firstHebrewCharIndex + 1);
+					} else if (firstHebrewCharIndex === -1 && line[0] !== '\u2067') {
+						line = '\u2067' + line;
+					}
+				} else { // For all other lines
+					if (line[0] !== '\u2067') {
+						line = '\u2067' + line;
+					}
+				}
+				if (line[line.length - 1] !== '\u2069') {
+					line += '\u2069';
+				}
+				lines[i] = line;
+			}
+			textarea.value = lines.join('\n');
+			myStatus.innerText = 'הפוסט תוקן בהצלחה';
 			myStatus.style.display = 'block';
 			revertButton.style.display = 'block';
-            setTimeout(function() { myStatus.innerText = ''; myStatus.style.display = 'none'; }, 2000);
-        };
+			setTimeout(function() { myStatus.innerText = ''; myStatus.style.display = 'none'; }, 2000);
+		};
+
+
 
         copyButton.onclick = function() {
             navigator.clipboard.writeText(textarea.value)
